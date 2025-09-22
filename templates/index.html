@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.personal_info.name }} - {{ data.personal_info.title }}</title>
+    <meta name="description" content="Portfolio of {{ data.personal_info.name }}, a {{ data.personal_info.title }} specializing in web development, Python, and Salesforce technologies.">
+    <meta name="keywords" content="Software Developer, Python, Flask, Salesforce, Web Development, Portfolio">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h3>{{ data.personal_info.name }}</h3>
+            </div>
+            <div class="navbar-menu" id="navbar-menu">
+                <a href="#home" class="navbar-link">Home</a>
+                <a href="#about" class="navbar-link">About</a>
+                <a href="#projects" class="navbar-link">Projects</a>
+                <a href="#skills" class="navbar-link">Skills</a>
+                <a href="{{ url_for('blogs') }}" class="navbar-link">Blog</a>
+                <a href="#contact" class="navbar-link">Contact</a>
+            </div>
+            <div class="navbar-toggle" id="navbar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">{{ data.personal_info.name }}</h1>
+                    <h2 class="hero-subtitle">{{ data.personal_info.title }}</h2>
+                    <p class="hero-description">{{ data.personal_info.summary }}</p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn--primary">Get In Touch</a>
+                        <a href="mailto:{{ data.personal_info.email }}" class="btn btn--outline">Email Me</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ data.personal_info.name }}" onerror="this.style.display='none';">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <p>{{ data.personal_info.summary }}</p>
+                <div class="about-details">
+                    <div class="detail-item">
+                        <h4>🎓 Education</h4>
+                        <p><strong>{{ data.education.degree }}</strong></p>
+                        <p>{{ data.education.college }} - {{ data.education.cgpa }}</p>
+                        <p><strong>{{ data.education.intermediate.course }}</strong> - {{ data.education.intermediate.percentage }}</p>
+                        <p>{{ data.education.intermediate.school }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>💼 Experience</h4>
+                        <p><strong>{{ data.experience.position }}</strong></p>
+                        <p>{{ data.experience.company }}</p>
+                        <ul style="text-align: left; margin-top: 1rem;">
+                            {% for responsibility in data.experience.responsibilities %}
+                            <li style="margin-bottom: 0.5rem;">{{ responsibility }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                {% if data.achievements %}
+                <div class="about-details" style="margin-top: 2rem;">
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <h4>🏆 Achievements</h4>
+                        <ul style="text-align: left;">
+                            {% for achievement in data.achievements %}
+                            <li style="margin-bottom: 0.5rem;">{{ achievement }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                {% for project in data.projects %}
+                <div class="project-card">
+                    <h3 class="project-title">{{ project.name }}</h3>
+                    <p class="project-description">{{ project.description }}</p>
+                    <div class="project-technologies">
+                        {% for tech in project.technologies %}
+                        <span class="tech-tag">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ project.github }}" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>💼 Salesforce</h3>
+                    <div class="skill-tags">
+                        {% for skill in data.skills.salesforce %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>🎨 Frontend</h3>
+                    <div class="skill-tags">
+                        {% for skill in data.skills.frontend %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>⚙️ Backend</h3>
+                    <div class="skill-tags">
+                        {% for skill in data.skills.backend %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>🗄️ Database & Tools</h3>
+                    <div class="skill-tags">
+                        {% for skill in data.skills.database %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                        {% for skill in data.skills.version_control %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div style="margin-top: 4rem;">
+                <h3 style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem;">🎖️ Certifications</h3>
+                <div class="skills-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+                    {% for cert in data.certifications %}
+                    <div class="skill-category">
+                        <h4 style="color: #2563eb; margin-bottom: 1rem;">{{ cert.provider }}</h4>
+                        <div class="skill-tags">
+                            {% for course in cert.courses %}
+                            <span class="skill-tag">{{ course }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Let's Connect!</h3>
+                    <p style="color: #64748b; margin-bottom: 2rem;">I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology.</p>
+
+                    <div class="contact-item">
+                        <strong>📧 Email:</strong> {{ data.personal_info.email }}
+                    </div>
+                    <div class="contact-item">
+                        <strong>📱 Phone:</strong> {{ data.personal_info.phone }}
+                    </div>
+                    <div class="contact-item">
+                        <strong>📍 Location:</strong> {{ data.personal_info.location }}
+                    </div>
+
+                    <div class="social-links">
+                        <a href="https://{{ data.personal_info.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://{{ data.personal_info.github }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    </div>
+                </div>
+
+                <form class="contact-form" method="POST" action="{{ url_for('contact') }}">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your Message" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn--primary" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 {{ data.personal_info.name }}. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://{{ data.personal_info.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://{{ data.personal_info.github }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="{{ url_for('blogs') }}">Blog</a>
+                <a href="{{ url_for('admin_login') }}">Admin</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

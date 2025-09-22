@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - {{ data.personal_info.name }}</title>
+    <meta name="description" content="Blog posts by {{ data.personal_info.name }} on software development, technology, and programming insights.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="padding-top: 80px;">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">
+                    <h3>{{ data.personal_info.name }}</h3>
+                </a>
+            </div>
+            <div class="navbar-menu" id="navbar-menu">
+                <a href="{{ url_for('index') }}" class="navbar-link">Home</a>
+                <a href="{{ url_for('index') }}#about" class="navbar-link">About</a>
+                <a href="{{ url_for('index') }}#projects" class="navbar-link">Projects</a>
+                <a href="{{ url_for('index') }}#skills" class="navbar-link">Skills</a>
+                <a href="{{ url_for('blogs') }}" class="navbar-link active">Blog</a>
+                <a href="{{ url_for('index') }}#contact" class="navbar-link">Contact</a>
+            </div>
+            <div class="navbar-toggle" id="navbar-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="projects" style="padding-top: 3rem;">
+        <div class="container">
+            <h1 class="section-title">Blog</h1>
+            <p style="text-align: center; color: #64748b; margin-bottom: 3rem; font-size: 1.125rem;">
+                Thoughts, insights, and tutorials on software development and technology
+            </p>
+
+            <!-- Search Bar -->
+            <div style="max-width: 500px; margin: 0 auto 3rem auto;">
+                <input type="text" id="blog-search" placeholder="Search blog posts..." 
+                       style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-size: 1rem;">
+            </div>
+
+            {% if posts %}
+            <div class="blog-grid">
+                {% for post in posts %}
+                <article class="blog-card">
+                    <div class="blog-card-content">
+                        <h2 class="blog-title">
+                            <a href="{{ url_for('blog_detail', post_id=post[0]) }}" style="text-decoration: none; color: inherit;">
+                                {{ post[1] }}
+                            </a>
+                        </h2>
+                        <p class="blog-excerpt">{{ post[2][:200] }}{% if post[2]|length > 200 %}...{% endif %}</p>
+                        <div class="blog-meta">
+                            <span>{{ post[3][:10] }}</span>
+                            <a href="{{ url_for('blog_detail', post_id=post[0]) }}" class="read-more">Read More →</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 4rem 0;">
+                <h3 style="color: #64748b; margin-bottom: 1rem;">No blog posts yet</h3>
+                <p style="color: #94a3b8;">Stay tuned for interesting content!</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 {{ data.personal_info.name }}. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="https://{{ data.personal_info.linkedin }}" target="_blank">LinkedIn</a>
+                <a href="https://{{ data.personal_info.github }}" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

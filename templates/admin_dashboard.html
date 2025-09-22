@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - {{ data.personal_info.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="padding-top: 80px; background: #f8fafc;">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">
+                    <h3>{{ data.personal_info.name }}</h3>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <a href="{{ url_for('index') }}" class="navbar-link">Home</a>
+                <a href="{{ url_for('blogs') }}" class="navbar-link">Blog</a>
+                <a href="{{ url_for('admin_dashboard') }}" class="navbar-link active">Dashboard</a>
+                <a href="{{ url_for('admin_logout') }}" class="navbar-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <section style="padding: 3rem 0;">
+        <div class="container">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h1 class="section-title" style="margin-bottom: 3rem;">Admin Dashboard</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ posts|length }}</div>
+                        <div class="stat-label">Blog Posts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ messages|length }}</div>
+                        <div class="stat-label">Recent Messages</div>
+                    </div>
+                </div>
+
+                <!-- Blog Management -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; margin-bottom: 3rem; border: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: #1e293b;">Blog Posts</h2>
+                        <a href="{{ url_for('admin_new_blog') }}" class="btn btn--primary">New Post</a>
+                    </div>
+
+                    {% if posts %}
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Title</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Status</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Created</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in posts %}
+                                <tr style="border-bottom: 1px solid #f1f5f9;">
+                                    <td style="padding: 1rem;">
+                                        <strong>{{ post[1] }}</strong>
+                                    </td>
+                                    <td style="padding: 1rem;">
+                                        {% if post[5] %}
+                                        <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">Published</span>
+                                        {% else %}
+                                        <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">Draft</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 1rem; color: #64748b;">{{ post[3][:10] }}</td>
+                                    <td style="padding: 1rem;">
+                                        <a href="{{ url_for('admin_edit_blog', post_id=post[0]) }}" style="color: #2563eb; text-decoration: none; margin-right: 1rem;">Edit</a>
+                                        <a href="{{ url_for('admin_delete_blog', post_id=post[0]) }}" 
+                                           style="color: #dc2626; text-decoration: none;"
+                                           onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: #64748b; padding: 2rem 0;">No blog posts yet. Create your first post!</p>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Messages -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; border: 1px solid #e2e8f0;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">Recent Contact Messages</h2>
+
+                    {% if messages %}
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Name</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Email</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Subject</th>
+                                    <th style="text-align: left; padding: 1rem; font-weight: 600; color: #374151;">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for message in messages %}
+                                <tr style="border-bottom: 1px solid #f1f5f9;">
+                                    <td style="padding: 1rem;">{{ message[1] }}</td>
+                                    <td style="padding: 1rem;">{{ message[2] }}</td>
+                                    <td style="padding: 1rem;">{{ message[3] }}</td>
+                                    <td style="padding: 1rem; color: #64748b;">{{ message[5][:10] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: #64748b; padding: 2rem 0;">No contact messages yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

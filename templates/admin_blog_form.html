@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Edit' if post else 'New' }} Blog Post - {{ data.personal_info.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="padding-top: 80px; background: #f8fafc;">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">
+                    <h3>{{ data.personal_info.name }}</h3>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <a href="{{ url_for('index') }}" class="navbar-link">Home</a>
+                <a href="{{ url_for('blogs') }}" class="navbar-link">Blog</a>
+                <a href="{{ url_for('admin_dashboard') }}" class="navbar-link">Dashboard</a>
+                <a href="{{ url_for('admin_logout') }}" class="navbar-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <section style="padding: 3rem 0;">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div style="background: white; border-radius: 1rem; padding: 3rem; border: 1px solid #e2e8f0;">
+                    <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem; text-align: center;">
+                        {{ 'Edit Blog Post' if post else 'Create New Blog Post' }}
+                    </h1>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" class="admin-form">
+                        <div class="form-group">
+                            <label for="title" style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Title</label>
+                            <input type="text" id="title" name="title" 
+                                   value="{{ post[1] if post else '' }}" 
+                                   placeholder="Enter blog post title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content" style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Content</label>
+                            <textarea id="content" name="content" rows="20" 
+                                      placeholder="Write your blog post content here... You can use HTML tags for formatting."
+                                      required>{{ post[2] if post else '' }}</textarea>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="published" 
+                                       {{ 'checked' if not post or post[5] else '' }}
+                                       style="width: 18px; height: 18px;">
+                                <span style="font-weight: 500; color: #374151;">Publish immediately</span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <button type="submit" class="btn btn--primary">
+                                {{ 'Update Post' if post else 'Create Post' }}
+                            </button>
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn--secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Formatting Help -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; margin-top: 2rem; border: 1px solid #e2e8f0;">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Formatting Help</h3>
+                    <div style="color: #64748b; font-size: 0.875rem; line-height: 1.6;">
+                        <p><strong>HTML tags you can use:</strong></p>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li>&lt;p&gt; for paragraphs</li>
+                            <li>&lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt; for headings</li>
+                            <li>&lt;strong&gt; for bold text</li>
+                            <li>&lt;em&gt; for italic text</li>
+                            <li>&lt;ul&gt; and &lt;li&gt; for bullet lists</li>
+                            <li>&lt;a href="url"&gt; for links</li>
+                            <li>&lt;code&gt; for inline code</li>
+                            <li>&lt;pre&gt;&lt;code&gt; for code blocks</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
