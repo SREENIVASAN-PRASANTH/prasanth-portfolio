@@ -131,3 +131,8 @@ dmypy.json
 # OS
 .DS_Store
 Thumbs.db
+
+instance/
+*.db
+.env
+__pycache__/
